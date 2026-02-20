@@ -9,7 +9,7 @@ def calcular_horas_extras(
     def converter_hora(hora: str) -> int:
         try:
             h, m = map(int, hora.split(':'))
-            if h < 0 or m < 0 or m >= 60:
+            if h < 0 or h >= 24 or m < 0 or m >= 60:
                 raise ValueError
             return h * 60 + m
         except:

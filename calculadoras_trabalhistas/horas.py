@@ -5,6 +5,12 @@ def calcular_intervalo(horario_inicial: str, horario_final: str) -> int:
     except ValueError:
         raise ValueError("Formato inválido. Use HH:MM")
 
+    for h, m in [(h1, m1), (h2, m2)]:
+        if h < 0 or h > 23:
+            raise ValueError(f"Hora inválida: {h:02d}")
+        if m < 0 or m > 59:
+            raise ValueError(f"Minuto inválido: {m:02d}")
+
     inicio =h1 * 60 +m1
     final = h2 * 60 + m2
 
