@@ -1,4 +1,9 @@
-from aliquotas.irpf_2026 import TABELA_IRPF_2026, ABATIMENTO_ISENCAO_2026, LIMITE_ISENCAO_2026
+from aliquotas.irpf_2026 import (
+    TABELA_IRPF_2026,
+    ABATIMENTO_ISENCAO_2026,
+    LIMITE_ISENCAO_2026,
+)
+
 
 def calcular_irpf(base: float) -> float:
     if base <= 0:
@@ -17,4 +22,5 @@ def calcular_irpf(base: float) -> float:
         return 0.0
 
     imposto -= ABATIMENTO_ISENCAO_2026
+
     return max(imposto, 0.0)

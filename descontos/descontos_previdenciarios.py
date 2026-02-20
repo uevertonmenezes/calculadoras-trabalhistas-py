@@ -1,7 +1,6 @@
 from descontos.inss import calcular_inss
 from descontos.irpf import calcular_irpf
 from aliquotas.irpf_2026 import DEDUCAO_DEPENDENTE
-
 from typing import Tuple
 
 
