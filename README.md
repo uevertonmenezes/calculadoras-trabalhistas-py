@@ -21,8 +21,10 @@ Calculadora de horas;
 Calculadora de décimo terceiro;  
 Calculadoras de INSS e IRPF (útiliza como função à parte para demais códigos).
 
+## Funções em desenvolvimento:
+Calculadora de recisão contratual.
+
 ## Funções a desenvolver:
-Calculadora de recisão contratual;  
 Calculadora de FGTS;  
 Calculadoras de indenizações trabalhistas.  
 Calculadora de sálario bruto e líquido;  
