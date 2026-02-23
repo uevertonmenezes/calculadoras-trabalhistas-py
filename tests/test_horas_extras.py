@@ -9,7 +9,7 @@ SALARIO_BASE = 1621
 HORA_MES_PADRAO = 220
 
 HORA_0 = "00:00"
-HORA_1 = "01:00"
+HORA_1 = "30:00"
 HORA_INVALIDA = "2H"
 
 
@@ -21,14 +21,14 @@ def test_calculo_basico_deve_retornar_valores_corretos():
         hora_mes=HORA_MES_PADRAO,
         hora_extra50=HORA_1,
         hora_extra100=HORA_1,
-        hora_noturna=HORA_1
+        hora_extra_noturna=HORA_1
     )
 
     assert resultado["valor_hora_trabalhada"] == pytest.approx(7.37, 0.01)
-    assert resultado["total_hora_extra50"] == pytest.approx(11.05, 0.01)
-    assert resultado["total_hora_extra100"] == pytest.approx(14.74, 0.01)
-    assert resultado["total_hora_noturna"] == pytest.approx(13.26, 0.01)
-    assert resultado["total_geral"] == pytest.approx(39.05, 0.01)
+    assert resultado["total_hora_extra50"] == pytest.approx(331.50, 0.01)
+    assert resultado["total_hora_extra100"] == pytest.approx(442.20, 0.01)
+    assert resultado["total_hora_noturna"] == pytest.approx(397.80, 0.01)
+    assert resultado["total_geral"] == pytest.approx(1171.50, 0.01)
 
 
 # FORMATO DE HORAS #
@@ -37,7 +37,7 @@ def test_calculo_basico_deve_retornar_valores_corretos():
     "hora_valida, hora_invalida",
     [
         (HORA_1, HORA_INVALIDA),
-        (HORA_0, "25:00"),
+        (HORA_0, "25h00m"),
         (HORA_0, "-01:00"),
         (HORA_0, "00:60"),
         (HORA_0, "abc"),
@@ -50,7 +50,7 @@ def test_formato_hora_invalido_deve_gerar_erro(hora_valida, hora_invalida):
             hora_mes=HORA_MES_PADRAO,
             hora_extra50=hora_invalida,
             hora_extra100=hora_valida,
-            hora_noturna=hora_valida
+            hora_extra_noturna=hora_valida
         )
 
 
@@ -62,7 +62,7 @@ def test_sem_horas_extras_total_deve_ser_zero():
         hora_mes=HORA_MES_PADRAO,
         hora_extra50=HORA_0,
         hora_extra100=HORA_0,
-        hora_noturna=HORA_0
+        hora_extra_noturna=HORA_0
     )
 
     assert resultado["total_geral"] == pytest.approx(0.0, 0.01)
@@ -76,7 +76,7 @@ def test_estrutura_de_retorno_deve_ser_dicionario_com_chaves_esperadas():
         hora_mes=HORA_MES_PADRAO,
         hora_extra50=HORA_1,
         hora_extra100=HORA_0,
-        hora_noturna=HORA_0
+        hora_extra_noturna=HORA_0
     )
 
     assert isinstance(resultado, dict)
@@ -99,7 +99,7 @@ def test_valores_decimais_deve_funcionar_corretamente():
         hora_mes=HORA_MES_PADRAO,
         hora_extra50="02:30",
         hora_extra100="01:45",
-        hora_noturna="00:15"
+        hora_extra_noturna="00:15"
     )
 
     # Apenas validar que valores não são negativos e total geral bate.
