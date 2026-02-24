@@ -1,6 +1,6 @@
 import pytest
 
-from calculadoras_trabalhistas.horas import calcular_total
+from calculadoras_trabalhistas.horas import calcular_total_intervalo
 
 
 # HORÁRIOS PADRÃO #
@@ -31,28 +31,36 @@ INTERVALO_VARIOS = [
     ]
 )
 def test_calcular_total_deve_retornar_valor_correto(intervalos, esperado):
-    assert calcular_total(intervalos) == esperado
+    assert calcular_total_intervalo(intervalos) == esperado
 
 
 # VALIDAÇÃO DE HORÁRIOS #
 
-def test_horario_final_menor_deve_gerar_erro():
-    with pytest.raises(ValueError):
-        calcular_total([("18:00", "08:00")])
+def test_intervalo_que_cruza_meia_noite():
+    assert calcular_total_intervalo([("22:00", "02:00")]) == "04:00"
+    assert calcular_total_intervalo([("23:30", "00:45")]) == "01:15"
+    assert calcular_total_intervalo([("00:00", "00:00")]) == "00:00"
+    assert calcular_total_intervalo([("00:00", "00:00")]) == "00:00"
+    assert calcular_total_intervalo([("23:59", "00:01")]) == "00:02"
 
 
 def test_formato_invalido_deve_gerar_erro():
     with pytest.raises(ValueError):
-        calcular_total([("8h", "12:00")])
+        calcular_total_intervalo([("8h", "12:00")])
 
 
 def test_formato_invalido_minutos_negativos_ou_acima_de_59():
     with pytest.raises(ValueError):
-        calcular_total([("8h:-1", "12:00")])
+        calcular_total_intervalo([("8h:-1", "12:00")])
     with pytest.raises(ValueError):
-        calcular_total([("08:00", "12:60")])
+        calcular_total_intervalo([("08:00", "12:60")])
 
 
 def test_formato_invalido_horas_negativas():
     with pytest.raises(ValueError):
-        calcular_total([("-01:00", "12:00")])
+        calcular_total_intervalo([("-01:00", "12:00")])
+
+
+def test_intervalos_mistos_dia_e_noite():
+    intervalos = [("09:00", "12:00"), ("22:30", "01:00")]
+    assert calcular_total_intervalo(intervalos) == "05:30"

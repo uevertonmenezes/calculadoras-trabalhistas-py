@@ -1,32 +1,41 @@
-def calcular_intervalo(horario_inicial: str, horario_final: str) -> int:
-    try:
-        h1, m1 = map(int, horario_inicial.split(":"))
-        h2, m2 = map(int, horario_final.split(":"))
-    except ValueError:
-        raise ValueError("Formato inválido. Use HH:MM")
+from typing import List, Tuple
 
-    for h, m in [(h1, m1), (h2, m2)]:
-        if h < 0 or h > 23:
-            raise ValueError(f"Hora inválida: {h:02d}")
-        if m < 0 or m > 59:
-            raise ValueError(f"Minuto inválido: {m:02d}")
 
-    inicio =h1 * 60 +m1
-    final = h2 * 60 + m2
+def converter_hora_para_minutos(hora: str) -> int:
+    if len(hora) != 5 or hora[2] != ":":
+        raise ValueError(f"Formato inválido: {hora}. Use HH:MM com dois dígitos cada.")
+
+    h_str, m_str = hora.split(":")
+
+    if not (h_str.isdigit() and m_str.isdigit()):
+        raise ValueError(f"Formato inválido: {hora}. Use apenas números em HH e MM.")
+
+    h, m = int(h_str), int(m_str)
+
+    if not (0 <= h <= 23):
+        raise ValueError(f"Hora inválida: {h:02d}")
+    if not (0 <= m <= 59):
+        raise ValueError(f"Minuto inválido: {m:02d}")
+
+    return h * 60 + m
+
+
+def calcular_duracao_intervalo(horario_inicial: str, horario_final: str) -> int:
+    inicio = converter_hora_para_minutos(horario_inicial)
+    final = converter_hora_para_minutos(horario_final)
 
     if final < inicio:
-        raise ValueError("Horário final menor que o inicial")
+        final += 24 * 60
 
     return final - inicio
 
 
-def calcular_total(intervalos: list[tuple[str, str]]) -> str:
-    total_minutos = 0
-
-    for inicio, final in intervalos:
-        total_minutos += calcular_intervalo(inicio, final)
-
+def formatar_minutos_hhmm(total_minutos: int) -> str:
     horas = total_minutos // 60
     minutos = total_minutos % 60
-
     return f"{horas:02d}:{minutos:02d}"
+
+
+def calcular_total_intervalo(intervalos: List[Tuple[str, str]]) -> str:
+    total_minutos = sum(calcular_duracao_intervalo(inicio, fim) for inicio, fim in intervalos)
+    return formatar_minutos_hhmm(total_minutos)
