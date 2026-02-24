@@ -1,4 +1,13 @@
 from decimal import Decimal, ROUND_HALF_UP
+from typing import TypedDict
+
+
+class ResultadoHorasExtras(TypedDict):
+    valor_hora_trabalhada: Decimal
+    total_hora_extra50: Decimal
+    total_hora_extra100: Decimal
+    total_hora_extra_noturna: Decimal
+    total_geral: Decimal
 
 
 def calcular_horas_extras(
@@ -7,7 +16,7 @@ def calcular_horas_extras(
         hora_extra50: str,
         hora_extra100: str,
         hora_extra_noturna: str
-) -> dict:
+) -> ResultadoHorasExtras:
 
     if hora_mes <= 0:
         raise ValueError("hora_mes deve ser maior que zero.")
@@ -39,7 +48,9 @@ def calcular_horas_extras(
 
     valor_extra50 = min_extra50 * valor_minuto * ADICIONAL_50
     valor_extra100 = min_extra100 * valor_minuto * ADICIONAL_100
-    valor_extra_noturna = (min_extra_noturna * valor_minuto * ADICIONAL_NOTURNO) * ADICIONAL_50
+    valor_extra_noturna = (
+        min_extra_noturna * valor_minuto * ADICIONAL_NOTURNO
+    ) * ADICIONAL_50
 
     total = valor_extra50 + valor_extra100 + valor_extra_noturna
 
@@ -47,9 +58,9 @@ def calcular_horas_extras(
         return valor.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     return {
-        "valor_hora_trabalhada": float(arredondar(valor_hora)),
-        "total_hora_extra50": float(arredondar(valor_extra50)),
-        "total_hora_extra100": float(arredondar(valor_extra100)),
-        "total_hora_noturna": float(arredondar(valor_extra_noturna)),
-        "total_geral": float(arredondar(total)),
+        "valor_hora_trabalhada": arredondar(valor_hora),
+        "total_hora_extra50": arredondar(valor_extra50),
+        "total_hora_extra100": arredondar(valor_extra100),
+        "total_hora_extra_noturna": arredondar(valor_extra_noturna),
+        "total_geral": arredondar(total),
     }

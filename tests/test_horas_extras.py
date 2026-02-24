@@ -1,5 +1,6 @@
 import pytest
 
+from decimal import Decimal
 from calculadoras_trabalhistas.horas_extras import calcular_horas_extras
 
 
@@ -9,7 +10,7 @@ SALARIO_BASE = 1621
 HORA_MES_PADRAO = 220
 
 HORA_0 = "00:00"
-HORA_1 = "30:00"
+HORA_1 = "01:00"
 HORA_INVALIDA = "2H"
 
 
@@ -24,11 +25,11 @@ def test_calculo_basico_deve_retornar_valores_corretos():
         hora_extra_noturna=HORA_1
     )
 
-    assert resultado["valor_hora_trabalhada"] == pytest.approx(7.37, 0.01)
-    assert resultado["total_hora_extra50"] == pytest.approx(331.50, 0.01)
-    assert resultado["total_hora_extra100"] == pytest.approx(442.20, 0.01)
-    assert resultado["total_hora_noturna"] == pytest.approx(397.80, 0.01)
-    assert resultado["total_geral"] == pytest.approx(1171.50, 0.01)
+    assert resultado["valor_hora_trabalhada"] == Decimal("7.37")
+    assert resultado["total_hora_extra50"] == Decimal("11.05")
+    assert resultado["total_hora_extra100"] == Decimal("14.74")
+    assert resultado["total_hora_extra_noturna"] == Decimal("13.26")
+    assert resultado["total_geral"] == Decimal("39.05")
 
 
 # FORMATO DE HORAS #
@@ -65,7 +66,7 @@ def test_sem_horas_extras_total_deve_ser_zero():
         hora_extra_noturna=HORA_0
     )
 
-    assert resultado["total_geral"] == pytest.approx(0.0, 0.01)
+    assert resultado["total_geral"] == Decimal("0.0")
 
 
 # ESTRUTURA DO RETORNO #
@@ -84,7 +85,7 @@ def test_estrutura_de_retorno_deve_ser_dicionario_com_chaves_esperadas():
         "valor_hora_trabalhada",
         "total_hora_extra50",
         "total_hora_extra100",
-        "total_hora_noturna",
+        "total_hora_extra_noturna",
         "total_geral"
     ]
     for chave in chaves_esperadas:
@@ -107,6 +108,6 @@ def test_valores_decimais_deve_funcionar_corretamente():
     total_calculado = (
         resultado["total_hora_extra50"]
         + resultado["total_hora_extra100"]
-        + resultado["total_hora_noturna"]
+        + resultado["total_hora_extra_noturna"]
     )
-    assert resultado["total_geral"] == pytest.approx(total_calculado, 0.01)
+    assert resultado["total_geral"] == Decimal(total_calculado)
