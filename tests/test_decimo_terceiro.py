@@ -24,39 +24,39 @@ def test_primeira_parcela_sem_descontos():
     resultado = calcular_decimo_terceiro(
         salario_bruto=SALARIO_BAIXO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.primeira
+        parcela=ParcelaDecimo.PRIMEIRA
     )
 
     assert resultado["valor_bruto"] == pytest.approx(1500.00, 0.01)
     assert resultado["desconto_inss"] == 0.0
     assert resultado["desconto_irpf"] == 0.0
-    assert resultado["valor_decimo_terceiro"] == pytest.approx(1500.00, 0.01)
+    assert resultado["valor_liquido"] == pytest.approx(1500.00, 0.01)
 
 
 def test_segunda_parcela_com_descontos():
     resultado = calcular_decimo_terceiro(
         salario_bruto=SALARIO_BAIXO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.segunda
+        parcela=ParcelaDecimo.SEGUNDA
     )
 
     assert resultado["valor_bruto"] == pytest.approx(1500.00, 0.01)
     assert resultado["desconto_inss"] > 0
     assert resultado["desconto_irpf"] >= 0
-    assert resultado["valor_decimo_terceiro"] < resultado["valor_bruto"]
+    assert resultado["valor_liquido"] < resultado["valor_bruto"]
 
 
 def test_parcela_unica_com_descontos():
     resultado = calcular_decimo_terceiro(
         salario_bruto=SALARIO_BAIXO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.unica
+        parcela=ParcelaDecimo.UNICA
     )
 
     assert resultado["valor_bruto"] == pytest.approx(3000.00, 0.01)
     assert resultado["desconto_inss"] > 0
     assert resultado["desconto_irpf"] >= 0
-    assert resultado["valor_decimo_terceiro"] < resultado["valor_bruto"]
+    assert resultado["valor_liquido"] < resultado["valor_bruto"]
 
 
 # DEPENDENTES #
@@ -65,13 +65,13 @@ def test_dependentes_reduzem_irpf_quando_ha_imposto():
     sem_dependentes = calcular_decimo_terceiro(
         salario_bruto=SALARIO_ALTO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.unica,
+        parcela=ParcelaDecimo.UNICA,
         dependentes=DEP_ZERO
     )
     com_dependentes = calcular_decimo_terceiro(
         salario_bruto=SALARIO_ALTO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.unica,
+        parcela=ParcelaDecimo.UNICA,
         dependentes=DEP_UM
     )
 
@@ -83,13 +83,13 @@ def test_dependentes_nao_afetam_irpf_quando_isento():
     sem_dependentes = calcular_decimo_terceiro(
         salario_bruto=SALARIO_ISENTO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.unica,
+        parcela=ParcelaDecimo.UNICA,
         dependentes=DEP_ZERO
     )
     com_dependentes = calcular_decimo_terceiro(
         salario_bruto=SALARIO_ISENTO,
         meses_trabalhados=MESES_COMPLETO,
-        parcela=ParcelaDecimo.unica,
+        parcela=ParcelaDecimo.UNICA,
         dependentes=DEP_DOIS
     )
 
@@ -103,10 +103,10 @@ def test_decimo_terceiro_com_zero_meses_trabalhados():
     resultado = calcular_decimo_terceiro(
         salario_bruto=SALARIO_ISENTO,
         meses_trabalhados=MESES_ZERO,
-        parcela=ParcelaDecimo.unica
+        parcela=ParcelaDecimo.UNICA
     )
 
-    assert resultado["valor_decimo_terceiro"] == 0.0
+    assert resultado["valor_liquido"] == 0.0
 
 
 # VALIDAÇÕES DE ERRO #
@@ -119,9 +119,9 @@ def test_parcela_invalida_deve_gerar_erro(parcela_invalida):
 
 def test_salario_invalido_deve_gerar_erro():
     with pytest.raises(ValueError):
-        calcular_decimo_terceiro(0, MESES_COMPLETO, ParcelaDecimo.unica)
+        calcular_decimo_terceiro(0, MESES_COMPLETO, ParcelaDecimo.UNICA)
 
 
 def test_meses_trabalhados_invalidos_deve_gerar_erro():
     with pytest.raises(ValueError):
-        calcular_decimo_terceiro(SALARIO_BAIXO, MESES_INVALIDO, ParcelaDecimo.unica)
+        calcular_decimo_terceiro(SALARIO_BAIXO, MESES_INVALIDO, ParcelaDecimo.UNICA)
