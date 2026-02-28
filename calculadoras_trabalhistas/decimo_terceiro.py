@@ -10,6 +10,9 @@ class ParcelaDecimo(str, Enum):
     SEGUNDA = "segunda"
 
 
+ZERO = 0.00
+
+
 class ResultadoDecimoTerceiro(TypedDict):
     valor_bruto: float
     desconto_inss: float
@@ -36,9 +39,9 @@ def calcular_decimo_terceiro(
     salario_mes = salario_bruto / 12
     base_calculo = salario_mes * meses_trabalhados
 
-    valor_bruto = 0.0
-    desconto_inss = 0.0
-    desconto_irpf = 0.0
+    valor_bruto = ZERO
+    desconto_inss = ZERO
+    desconto_irpf = ZERO
 
     if parcela == ParcelaDecimo.PRIMEIRA:
         valor_bruto = base_calculo / 2
