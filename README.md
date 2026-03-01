@@ -1,5 +1,5 @@
 # Calculadoras Trabalhistas-py
-API desenvolvida em Python para realização de cálculos trabalhistas conforme a legislação brasileira vigente 
+Biblioteca desenvolvida em Python para realização de cálculos trabalhistas conforme a legislação brasileira vigente 
 (tabelas atualizadas para 2026).  
 
 Esse projeto tem como base a Consolidação das Leis do Trabalho (CLT) e normas complementares.  
