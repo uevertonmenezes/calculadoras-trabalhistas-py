@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from aliquotas.irpf_2026 import (
     TABELA_IRPF_2026,
     ABATIMENTO_ISENCAO_2026,
@@ -5,22 +7,25 @@ from aliquotas.irpf_2026 import (
 )
 
 
-def calcular_irpf(base: float) -> float:
-    if base <= 0:
-        return 0.0
+ZERO = Decimal("0.00")
 
-    imposto = 0.0
+
+def calcular_irpf(base: Decimal) -> Decimal:
+    if base <= ZERO:
+        return ZERO
+
+    imposto = ZERO
 
     for faixa in TABELA_IRPF_2026:
         if base <= faixa["base_ate"]:
             imposto = (base * faixa["aliquota"]) - faixa["parcela_deduzir"]
             break
 
-    imposto = max(imposto, 0.0)
+    imposto = max(imposto, ZERO)
 
     if base <= LIMITE_ISENCAO_2026:
-        return 0.0
+        return ZERO
 
     imposto -= ABATIMENTO_ISENCAO_2026
 
-    return max(imposto, 0.0)
+    return max(imposto, ZERO)
