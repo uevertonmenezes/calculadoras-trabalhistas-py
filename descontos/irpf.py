@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 
 from aliquotas.irpf_2026 import (
     TABELA_IRPF_2026,
@@ -8,10 +8,11 @@ from aliquotas.irpf_2026 import (
 
 
 ZERO = Decimal("0.00")
+DUAS_CASAS = Decimal("0.01")
 
 
 def calcular_irpf(base: Decimal) -> Decimal:
-    if base <= ZERO:
+    if base <= ZERO or base <= LIMITE_ISENCAO_2026:
         return ZERO
 
     imposto = ZERO
@@ -22,10 +23,7 @@ def calcular_irpf(base: Decimal) -> Decimal:
             break
 
     imposto = max(imposto, ZERO)
-
-    if base <= LIMITE_ISENCAO_2026:
-        return ZERO
-
     imposto -= ABATIMENTO_ISENCAO_2026
+    imposto = max(imposto, ZERO)
 
-    return max(imposto, ZERO)
+    return imposto.quantize(DUAS_CASAS, rounding=ROUND_HALF_UP)
